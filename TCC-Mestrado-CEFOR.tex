@@ -1,0 +1,517 @@
+% ------------------------------------------------
+% ------------------------------------------------
+% abnTeX2: Modelo de Relatório Técnico/Acadêmico em conformidade com 
+% ABNT NBR 10719:2015 Informação e documentação - Relatório técnico e/ou
+% científico - Apresentação
+% ----------------------------------------------- 
+% -----------------------------------------------
+\documentclass[
+	% -- opções da classe memoir --
+	12pt,				% tamanho da fonte
+	openright,			% capítulos começam em pág ímpar (insere página vazia caso preciso)
+	twoside,			% para impressão em recto e verso. Oposto a oneside
+	a4paper,			% tamanho do papel. 
+	% -- opções da classe abntex2 --
+	chapter=TITLE,		% títulos de capítulos convertidos em letras maiúsculas
+	%section=TITLE,		% títulos de seções convertidos em letras maiúsculas
+	%subsection=TITLE,	% títulos de subseções convertidos em letras maiúsculas
+	%subsubsection=TITLE,% títulos de subsubseções convertidos em letras maiúsculas
+	% -- opções do pacote babel --
+	english,			% idioma adicional para hifenização
+	french,				% idioma adicional para hifenização
+	spanish,			% idioma adicional para hifenização
+	brazil,				% o último idioma é o principal do documento
+	%sumario=tradicional, % Sumário identado
+	]{abntex2}
+	
+% ---
+% PACOTES
+% ---
+
+% ---
+% Pacotes fundamentais 
+% ---
+\usepackage{lmodern}			% Usa a fonte Latin Modern
+\usepackage[T1]{fontenc}		% Selecao de codigos de fonte.
+\usepackage[utf8]{inputenc}		% Codificacao do documento (conversão automática dos acentos)
+\usepackage{indentfirst}		% Indenta o primeiro parágrafo de cada seção.
+\usepackage{color}				% Controle das cores
+\usepackage{graphicx}			% Inclusão de gráficos
+\usepackage{microtype} 			% para melhorias de justificação
+\usepackage{pdfpages}
+\usepackage[makeindex]{imakeidx} % Índice remissivo
+
+% ---
+
+% ---
+% Pacotes adicionais, usados apenas no âmbito do Modelo Canônico do abnteX2
+% ---
+\usepackage{lipsum}				% para geração de dummy text
+% ---
+
+% ---
+% Pacotes adicionais, usados no anexo do modelo de folha de identificação e tabelas e quadros longos
+% ---
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{longtable,ltcaption}
+% ---
+	
+% ---
+% Pacotes de glossário
+% ---
+\let\printglossary\relax
+\let\theglossary\relax
+\let\endtheglossary\relax
+\usepackage[style=altlist,nonumberlist]{glossaries}
+\include{0-PreTextual/Glossario}
+% ---
+% Exemplo de configurações do glossário
+\renewcommand*{\glsseeformat}[3][\seename]{\textit{#1}  
+ \glsseelist{#2}}
+% ---
+
+\makeglossaries
+
+% ---
+% Pacotes de citações
+% ---
+\usepackage[brazilian,hyperpageref]{backref}  % Paginas com as citações na bibl
+\usepackage[alf,abnt-emphasize = bf,abnt-url-package=url]{abntex2cite}	% Citações padrão ABNT
+\def\UrlLeft{}
+\def\UrlRight{}
+
+%----
+% Pacote lista de Abreviações e siglas
+%---
+\usepackage{nomencl}
+\makenomenclature
+\renewcommand{\nomname}{Lista de Abreviaturas e Siglas}
+
+% --- 
+% CONFIGURAÇÕES DE PACOTES
+% --- 
+
+% ---
+% Configurações do pacote backref
+% Usado sem a opção hyperpageref de backref
+\renewcommand{\backrefpagesname}{Citado na(s) página(s):~}
+% Texto padrão antes do número das páginas
+\renewcommand{\backref}{}
+% Define os textos da citação
+\renewcommand*{\backrefalt}[4]{
+	\ifcase #1 %
+		Nenhuma citação no texto.%
+	\or
+		Citado na página #2.%
+	\else
+		Citado #1 vezes nas páginas #2.%
+	\fi}%
+% ---
+
+% Cria o comando \subtitulo. A norma define que o TITULO deve ser em caixa alta negrito, mas o subtitulo deve ser em caixa baixa. Outros comandos foram criados para preencher a folha de aprovação
+\providecommand{\imprimirsubtitulo}{}
+\newcommand{\subtitulo}[1]{\renewcommand{\imprimirsubtitulo}{#1}}
+
+\providecommand{\imprimircurso}{}
+\newcommand{\curso}[1]{\renewcommand{\imprimircurso}{#1}}
+
+\providecommand{\imprimirsubinstituicao}{}
+\newcommand{\subinstituicao}[1]{\renewcommand{\imprimirsubinstituicao}{#1}}
+
+\providecommand{\imprimirlinhadepesquisa}{}
+\newcommand{\linhadepesquisa}[1]{\renewcommand{\imprimirlinhadepesquisa}{#1}}
+
+\providecommand{\imprimirmembroA}{}
+\newcommand{\membroA}[1]{\renewcommand{\imprimirmembroA}{#1}}
+
+\providecommand{\imprimirfuncaomembroA}{}
+\newcommand{\funcaomembroA}[1]{\renewcommand{\imprimirfuncaomembroA}{#1}}
+
+\providecommand{\imprimirmembroB}{}
+\newcommand{\membroB}[1]{\renewcommand{\imprimirmembroB}{#1}}
+
+\providecommand{\imprimirfuncaomembroB}{}
+\newcommand{\funcaomembroB}[1]{\renewcommand{\imprimirfuncaomembroB}{#1}}
+
+\providecommand{\imprimirdataaprovacao}{}
+\newcommand{\dataaprovacao}[1]{\renewcommand{\imprimirdataaprovacao}{#1}}
+
+% ---
+% Informações de dados para CAPA e FOLHA DE ROSTO e Folha de aprovação
+% ---
+\include{personalizacao}
+
+% ---
+% Configurações de aparência do PDF final
+
+
+% alterando o aspecto da cor azul
+\definecolor{blue}{RGB}{41,5,195}
+
+% informações do PDF
+\makeatletter
+\hypersetup{
+     	%pagebackref=true,
+		pdftitle={\@title}, 
+		pdfauthor={\@author},
+    	pdfsubject={\imprimirpreambulo},
+	    pdfcreator={LaTeX with abnTeX2},
+		pdfkeywords={CEFOR}{ }{latex}{ }{abntex}{ }{abntex2}, 
+		colorlinks=true,       		% false: boxed links; true: colored links
+    	linkcolor=black,          	% color of internal links
+    	citecolor=black,        		% color of links to bibliography
+    	filecolor=black,      	% color of file links
+		urlcolor=black,
+		bookmarksdepth=4
+}
+\makeatother
+\renewcommand{\cftsectionfont}{\color{black}\normalfont\uppercase}
+% --- 
+
+% ---
+% Possibilita criação de Quadros e Lista de quadros.
+% Ver https://github.com/abntex/abntex2/issues/176
+%
+\newcommand{\quadroname}{Quadro}
+\newcommand{\listofquadrosname}{Lista de quadros}
+
+\newfloat[chapter]{quadro}{loq}{\quadroname}
+\newlistof{listofquadros}{loq}{\listofquadrosname}
+\newlistentry{quadro}{loq}{0}
+
+% configurações para atender às regras da ABNT
+\setfloatadjustment{quadro}{\centering}
+\counterwithout{quadro}{chapter}
+\renewcommand{\cftquadroname}{\quadroname\space} 
+\renewcommand*{\cftquadroaftersnum}{\hfill--\hfill}
+
+\setfloatlocations{quadro}{hbtp} % Ver https://github.com/abntex/abntex2/issues/176
+% ---
+
+% --- 
+% Espaçamentos entre linhas e parágrafos 
+% --- 
+
+% O tamanho do parágrafo é dado por:
+\setlength{\parindent}{1.3cm}
+
+% Controle do espaçamento entre um parágrafo e outro:
+\setlength{\parskip}{0.2cm}  % tente também \onelineskip
+
+% ---
+% compila o indice
+% ---
+\makeindex
+% ---
+
+%-----------------------------------------------------------------------
+% REDEFINIÇÃO DA CAPA e Folha de Rosto
+%-----------------------------------------------------------------------
+%---
+% REDEFINIÇÃO DA CAPA
+%---
+\renewcommand{\imprimircapa}{
+\begin{capa}
+    \center
+    \includegraphics[scale=0.6]{imagens/brasao.jpg}
+    
+    \MakeUppercase{{\ABNTEXchapterfont\bfseries\imprimirinstituicao \\ \imprimirsubinstituicao \\ Programa de Pós-graduação \\ Mestrado Profissional em Poder Legislativo}}
+
+    \vspace*{\fill}
+
+    {\textsc{\ABNTEXchapterfont\bfseries\large\imprimirautor}}
+
+    \vspace*{\fill}
+
+    \MakeUppercase{{\ABNTEXchapterfont\bfseries\imprimirtitulo}}
+    
+    {\ABNTEXchapterfont\imprimirsubtitulo}
+
+    \vspace*{\fill}
+
+    \vspace*{\fill}
+
+    {\large\imprimirlocal}
+    \par
+    {\large\imprimirdata}
+    \vspace{1cm}
+\end{capa}
+}
+
+%-------------------------
+% Folha de Rosto
+%---------------------------
+\makeatletter
+\renewcommand{\folhaderostocontent}{
+    \begin{center}
+        \par\textsc{{\ABNTEXchapterfont\bfseries\large\imprimirautor}}
+        
+        \vspace*{\fill}
+        
+        \vspace*{\fill}
+        
+        {\ABNTEXchapterfont\bfseries\Large\imprimirtitulo}
+        
+        {\ABNTEXchapterfont\Large\imprimirsubtitulo}
+      
+        \vspace*{\fill}
+        
+      \begin{flushright}
+      \begin{minipage}{.5\textwidth}
+      	 \SingleSpacing
+         \imprimirpreambulo
+         \par\bigskip
+      \end{minipage}
+      
+      \end{flushright}
+      \vspace*{\fill}
+      \begin{flushleft}
+      \begin{minipage}{.65\textwidth}
+      	 \SingleSpacing
+         \textbf{{\imprimirorientadorRotulo~\imprimirorientador}}
+         Área de Concentração: Poder Legislativo
+         
+         Linha de Pesquisa: \imprimirlinhadepesquisa 
+
+      \end{minipage}
+      
+      \end{flushleft}
+      
+       \vspace*{\fill}
+    
+        {\large\imprimirlocal}
+        \par
+        {\large\imprimirdata}
+        \vspace{1cm}
+    \end{center} 
+}
+\makeatother
+%---------------------------------------------------------------
+
+% ----
+% Início do documento
+% ----
+\begin{document}
+
+% Seleciona o idioma do documento (conforme pacotes do babel)
+%\selectlanguage{english}
+\selectlanguage{brazil}
+
+% Retira espaço extra obsoleto entre as frases.
+\frenchspacing 
+
+% ------------------------------------------------------
+% ELEMENTOS PRÉ-TEXTUAIS
+% ------------------------------------------------------
+% \pretextual
+
+% ---
+% Capa
+% ---
+\imprimircapa 
+% ---
+
+% ---
+% Folha de rosto
+% (o * indica que haverá a ficha bibliográfica)
+% ---
+\imprimirfolhaderosto*
+% ---
+
+% ---
+% Anverso da folha de rosto:
+% ---
+% Folha de autorização
+	\sffamily
+%	\vspace*{\fill}					% Posição vertical
+	\begin{center}					% Minipage Centralizado
+	\fbox{\begin{minipage}[c][7cm]{13cm}
+	Autorização
+   
+        \vspace{0.7cm}	
+Autorizo a divulgação do texto completo no sítio da Câmara dos Deputados e a reprodução total ou parcial, exclusivamente, para fins acadêmicos e científicos.
+
+        \vspace{0.7cm}
+        
+Assinatura: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ 
+
+        \vspace{0.7cm}
+        
+Data: \_\_\_/\_\_\_/\_\_\_
+
+     \hspace{9cm}
+	\end{minipage} }
+	
+	\end{center}
+%--------
+\input{0-PreTextual/FichaCatalografica.tex}
+% ---
+% Inserir folha de aprovação
+% ---
+\include{0-PreTextual/FolhadeAprovacao}
+% ---
+
+% ---
+% Dedicatória
+% ---
+\include{0-PreTextual/Dedicatoria}
+% ---
+
+% \include{0-PreTextual/Errata}
+
+% ---
+% Agradecimentos
+% ---
+\include{0-PreTextual/Agradecimentos}
+% ---
+
+% ---
+% Epígrafe
+% ---
+\include{0-PreTextual/Epigrafe}
+% ---
+
+% ---
+% RESUMOS
+% ---
+\include{0-PreTextual/Resumos}
+% ---
+
+% ---
+% inserir lista de ilustrações
+% ---
+\pdfbookmark[0]{\listfigurename}{lof}
+\listoffigures*
+\cleardoublepage
+% ---
+
+% ---
+% inserir lista de quadros
+% ---
+\pdfbookmark[0]{\listofquadrosname}{loq}
+\listofquadros*
+\cleardoublepage
+% ---
+
+% ---
+% inserir lista de tabelas
+% ---
+\pdfbookmark[0]{\listtablename}{lot}
+\listoftables*
+\cleardoublepage
+% ---
+
+% ---
+% inserir lista de abreviaturas e siglas
+% ---
+\printnomenclature[2cm] % entre colchetes é o espaçamento entre a sigla e seu significado
+\clearpage
+% A lista de abreviaturas e siglas está sendo gerada automaticamente, o que você precisa é incluir uma linha no seu texto que tenha o seguinte formato:
+% \nomenclature {APF} {Administração Pública Federal}
+% \nomenclature {sigla} {explicação}
+
+% ---
+% ---
+
+% ---
+% inserir lista de símbolos
+% ---
+%\include{0-PreTextual/ListadeSimbolos}
+% ---
+
+% ---
+% inserir o sumario
+% ---
+\pdfbookmark[0]{\contentsname}{toc}
+\tableofcontents*
+\cleardoublepage
+% ---
+
+% ------------------------------------------------
+% ELEMENTOS TEXTUAIS
+% ------------------------------------------------
+\textual
+
+% ------------------------------------------------
+% Introdução 
+% ------------------------------------------------
+\include{1-Introducao/introducao}
+
+% ------------------------------------------------
+% Fundamentação Teórica 
+% ------------------------------------------------
+\include{1-Introducao/fundamentacaoteorica}
+\include{1-Introducao/abntex2-modelo-include-comandos}
+% ------------------------------------------------
+% Desenvolvimento
+% ------------------------------------------------
+\include{2-Desenvolvimento/desenvolvimento}
+
+% ------------------------------------------------
+% Resultados e Análises
+% ------------------------------------------------
+%\part{Resultados}
+\include{2-Desenvolvimento/resultados}
+
+% ---
+% Finaliza a parte no bookmark do PDF
+% para que se inicie o bookmark na raiz
+% e adiciona espaço de parte no Sumário
+% ---
+\phantompart
+
+% ------------------------------------------------
+% Conclusão
+% ------------------------------------------------
+%\part{Conclusão}
+\include{3-Conclusao/conclusao}
+% ---
+
+% ------------------------------------------------
+% ELEMENTOS PÓS-TEXTUAIS
+% ------------------------------------------------
+\postextual
+
+% ------------------------------------------------
+% Referências bibliográficas
+% Aqui está referência o arquivo .BIB que contém todas as referências
+% ------------------------------------------------
+\bibliography{Referencias/TCC-mestrado-referencias}
+
+% ---
+% Imprime o glossário
+% ---
+\cleardoublepage
+\phantompart
+\addcontentsline{toc}{chapter}{\glossaryname}
+\printglossaries
+% ---
+
+% -----------------------------------------------
+% Apêndices
+% ------------------------------------------------
+\include{Apendices&Anexos/Apendices}
+% ---
+
+% ------------------------------------------------
+% Anexos
+% ------------------------------------------------
+\include{Apendices&Anexos/Anexos}
+
+%-------------------------------------------------
+% INDICE REMISSIVO
+% lista as referências que se utilizou o \index
+%-------------------------------------------------
+
+\phantompart
+\cleardoublepage
+\addcontentsline{toc}{chapter}{ÍNDICE REMISSIVO}
+\printindex
+
+%-------------------------------------------------
+% Formulário de Identificação (opcional)
+%-------------------------------------------------
+%\include{FormularioIdentificacao/formuláriodeidentificação}
+
+\end{document}
