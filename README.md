@@ -1,4 +1,4 @@
-# Modelo-Mestrado-Profissional-Camara-do-Deputados
+# Modelo-Mestrado-Profissional-Camara-dos-Deputados
 
 Modelo de TCC em Latex para a Câmara dos Deputados/CEFOR
 
